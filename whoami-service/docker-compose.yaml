@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  whoami:
+    image: containous/whoami
+    networks:
+      - traefik_web
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+  whoami2:
+    image: containous/whoami
+    networks:
+      - traefik_web
+    labels:
+      - "traefik.http.routers.whoami2.rule=Host(`whoami2.localhost`)"
+networks:
+  traefik_web:
+    external: true
