@@ -9,6 +9,7 @@ services:
       - traefik_web
     labels:
       - "traefik.http.routers.kuard.rule=Host(`kuard.localhost`)"
+      - "traefik.enable=true"
 networks:
   traefik_web:
     external: true

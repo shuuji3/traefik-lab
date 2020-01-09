@@ -6,6 +6,7 @@ services:
     command:
       - --api.insecure=true
       - --providers.docker
+      - --providers.docker.exposedByDefault=false
     ports:
       - "80:80"
       - "8080:8080"

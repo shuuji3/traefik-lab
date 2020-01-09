@@ -7,12 +7,14 @@ services:
       - traefik_web
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.enable=true"
   whoami2:
     image: containous/whoami
     networks:
       - traefik_web
     labels:
       - "traefik.http.routers.whoami2.rule=Host(`whoami2.localhost`)"
+      - "traefik.enable=true"
 networks:
   traefik_web:
     external: true
