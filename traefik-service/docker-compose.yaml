@@ -3,6 +3,15 @@ version: "3.7"
 services:
   traefik:
     image: "traefik:v2.1"
+    networks:
+      - traefik-net
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "./letsencrypt:/etc/traefik/acme"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command:
       #- --log.level=DEBUG
       - --api.insecure=true
@@ -16,15 +25,6 @@ services:
       - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
       - --certificatesresolvers.letsencrypt.acme.email=shuuji3@gmail.com
       - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - "./letsencrypt:/etc/traefik/acme"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    networks:
-      - traefik-net
 networks:
   traefik-net:
     name: traefik-net
