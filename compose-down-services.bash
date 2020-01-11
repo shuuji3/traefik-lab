@@ -6,6 +6,3 @@ for service in traefik-service whoami-service kuard-service; do
     docker-compose down
     cd ..
 done
-
-# Delete the shared network `traefik_web`
-docker network rm traefik_web

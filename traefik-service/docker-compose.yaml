@@ -1,19 +1,30 @@
-version: '3'
-
+#      - $PWD/traefik.toml:/etc/traefik/traefik.toml
+version: "3.7"
 services:
-  reverse-proxy:
-    image: traefik:v2.0
+  traefik:
+    image: "traefik:v2.1"
     command:
+      #- --log.level=DEBUG
       - --api.insecure=true
-      - --providers.docker
-      - --providers.docker.exposedByDefault=false
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      # Set subdomain with the container's "subdomain" label.
+      # If no label, fallback to the default service name
+      - --providers.docker.defaultRule=Host(`{{ if (index .Labels "subdomain") }}{{ index .Labels "subdomain" }}{{ else }}{{ .Name }}{{ end }}.shuuji3-traefik-lab.duckdns.org`)
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=shuuji3@gmail.com
+      - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "./letsencrypt:/etc/traefik/acme"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - traefik_web
+      - traefik-net
 networks:
-  traefik_web:
-    external: true
+  traefik-net:
+    name: traefik-net

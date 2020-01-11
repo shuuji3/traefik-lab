@@ -1,20 +1,31 @@
-version: '3'
-
+version: '3.7'
 services:
-  whoami:
-    image: containous/whoami
+  whoami1:
+    image: "containous/whoami"
     networks:
-      - traefik_web
+      - traefik-net
     labels:
-      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "subdomain=whoami1"
       - "traefik.enable=true"
+      - "traefik.http.routers.whoami1.entrypoints=https"
+      - "traefik.http.routers.whoami1.tls.certresolver=letsencrypt"
+      # redirect
+      - "traefik.http.routers.whoami1-redirect.entrypoints=http"
+      - "traefik.http.routers.whoami1-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
   whoami2:
-    image: containous/whoami
+    image: "containous/whoami"
     networks:
-      - traefik_web
+      - traefik-net
     labels:
-      - "traefik.http.routers.whoami2.rule=Host(`whoami2.localhost`)"
+      - "subdomain=whoami2"
       - "traefik.enable=true"
+      - "traefik.http.routers.whoami2.entrypoints=https"
+      - "traefik.http.routers.whoami2.tls.certresolver=letsencrypt"
+      # redirect
+      - "traefik.http.routers.whoami2-redirect.entrypoints=http"
+      - "traefik.http.routers.whoami2-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 networks:
-  traefik_web:
+  traefik-net:
     external: true

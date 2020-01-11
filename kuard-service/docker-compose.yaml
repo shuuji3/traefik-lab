@@ -1,15 +1,20 @@
-version: '3'
-
+version: '3.7'
 services:
   kuard:
     image: gcr.io/kuar-demo/kuard-amd64:1
     ports:
-      - 127.0.0.1:18080:8080
+      - 30000:8080
     networks:
-      - traefik_web
+      - traefik-net
     labels:
-      - "traefik.http.routers.kuard.rule=Host(`kuard.localhost`)"
+      - "subdomain=kuard"
       - "traefik.enable=true"
+      - "traefik.http.routers.kuard.entrypoints=https"
+      - "traefik.http.routers.kuard.tls.certresolver=letsencrypt"
+      # redirect
+      - "traefik.http.routers.kuard-redirect.entrypoints=http"
+      - "traefik.http.routers.kuard-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 networks:
-  traefik_web:
+  traefik-net:
     external: true
