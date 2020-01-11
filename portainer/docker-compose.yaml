@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  portainer:
+    image: portainer/portainer:latest
+    networks:
+      - traefik-net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "subdomain=portainer"
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.entrypoints=https"
+      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      # redirect
+      - "traefik.http.routers.portainer-redirect.entrypoints=http"
+      - "traefik.http.routers.portainer-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+networks:
+  traefik-net:
+    external: true
