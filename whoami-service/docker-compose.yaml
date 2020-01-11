@@ -26,6 +26,19 @@ services:
       - "traefik.http.routers.whoami2-redirect.entrypoints=http"
       - "traefik.http.routers.whoami2-redirect.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+  hello-whoami:
+    image: "containous/whoami"
+    networks:
+      - traefik-net
+    labels:
+      - "subdomain=hello.whoami"
+      - "traefik.enable=true"
+      - "traefik.http.routers.hello-whoami.entrypoints=https"
+      - "traefik.http.routers.hello-whoami.tls.certresolver=letsencrypt"
+      # redirect
+      - "traefik.http.routers.hello-whoami-redirect.entrypoints=http"
+      - "traefik.http.routers.hello-whoami-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 networks:
   traefik-net:
     external: true
