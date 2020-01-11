@@ -9,7 +9,6 @@ services:
       - "443:443"
       - "8080:8080"
     volumes:
-#      - $PWD/traefik.toml:/etc/traefik/traefik.toml
       - "./letsencrypt:/etc/traefik/acme"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command:
@@ -24,7 +23,8 @@ services:
       - --entrypoints.https.address=:443
       - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
       - --certificatesresolvers.letsencrypt.acme.email=shuuji3@gmail.com
-      - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      # Enable the staging server when testing
+      #- --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
     labels:
       - "subdomain=traefik"
       - "traefik.enable=true"
