@@ -9,7 +9,8 @@
 - traefik Dashboard with basic-auth: https://traefik.shuuji3-traefik-lab.duckdns.org/
 - test app1: https://whoami1.shuuji3-traefik-lab.duckdns.org/
 - test app2: https://whoami2.shuuji3-traefik-lab.duckdns.org/
-- test app3: https://kaurd.shuuji3-traefik-lab.duckdns.org/
+- test app3: https://hello.whoami.shuuji3-traefik-lab.duckdns.org/
+- test app4: https://kaurd.shuuji3-traefik-lab.duckdns.org/
 
 ## Scripts
 
