@@ -1,4 +1,3 @@
-#      - $PWD/traefik.toml:/etc/traefik/traefik.toml
 version: "3.7"
 services:
   traefik:
@@ -10,6 +9,7 @@ services:
       - "443:443"
       - "8080:8080"
     volumes:
+#      - $PWD/traefik.toml:/etc/traefik/traefik.toml
       - "./letsencrypt:/etc/traefik/acme"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command:
@@ -25,6 +25,20 @@ services:
       - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
       - --certificatesresolvers.letsencrypt.acme.email=shuuji3@gmail.com
       - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+    labels:
+      - "subdomain=traefik"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      # redirect
+      - "traefik.http.routers.traefik-redirect.entrypoints=http"
+      - "traefik.http.routers.traefik-redirect.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # basic auth
+      - traefik.http.routers.traefik.middlewares=basic-auth
+      - traefik.http.middlewares.basic-auth.basicauth.users=admin:$$apr1$$Wvu4TyCL$$I11p53R.liUoEy96HByAg0
+      - traefik.http.middlewares.basic-auth.basicauth.removeheader=true
 networks:
   traefik-net:
     name: traefik-net
